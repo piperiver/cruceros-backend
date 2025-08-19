@@ -1,0 +1,128 @@
+[
+  {
+    "date": "2025-08-19T19:09:13.353Z",
+    "cruises": [
+      {
+        "text": {
+          "fecha": "01-fe",
+          "puertos": "At Sea, Oranjestad (Aruba), Bonaire, At Sea, At Sea, Colon"
+        },
+        "prices": {
+          "Suite": 1.678,
+          "Balcon": 1.28,
+          "Vista al oceano": 1.217,
+          "Interno": 1.217
+        }
+      },
+      {
+        "text": {
+          "fecha": "15-fe",
+          "puertos": "At Sea, At Sea, Oranjestad (Aruba), Willemstad (Curacao), At Sea, Colon"
+        },
+        "prices": {
+          "Suite": 1.717,
+          "Balcon": 1.31,
+          "Vista al oceano": 1.256,
+          "Interno": 1.228
+        }
+      },
+      {
+        "text": {
+          "fecha": "22-fe",
+          "puertos": "At Sea, At Sea, Bonaire, Oranjestad (Aruba), At Sea, Colon"
+        },
+        "prices": {
+          "Suite": 1.717,
+          "Balcon": 1.31,
+          "Vista al oceano": 1.244,
+          "Interno": 1.228
+        }
+      },
+      {
+        "text": {
+          "fecha": "08-fe",
+          "puertos": "At Sea, Oranjestad (Aruba), Bonaire, At Sea, At Sea, Colon"
+        },
+        "prices": {
+          "Suite": 1.678,
+          "Balcon": 1.214,
+          "Vista al oceano": 1.157,
+          "Interno": 1.128
+        }
+      },
+      {
+        "text": {
+          "fecha": "03-fe",
+          "puertos": "Santa Marta Colombia, Oranjestad (Aruba), Oranjestad (Aruba), Bonaire, Willemstad (Curacao), At Sea, Castries St. Lucia, Bequia Grenadines"
+        },
+        "prices": {
+          "Suite": 4.419,
+          "Vista al oceano": null
+        }
+      }
+    ]
+  },
+  {
+    "date": "2025-08-19T21:55:45.422Z",
+    "cruises": [
+      {
+        "text": {
+          "fecha": "01-fe",
+          "puertos": "At Sea, Oranjestad (Aruba), Bonaire, At Sea, At Sea, Colon"
+        },
+        "prices": {
+          "Suite": 1.601,
+          "Balcon": 1.215,
+          "Vista al oceano": 1.155,
+          "Interno": 1.155
+        }
+      },
+      {
+        "text": {
+          "fecha": "15-fe",
+          "puertos": "At Sea, At Sea, Oranjestad (Aruba), Willemstad (Curacao), At Sea, Colon"
+        },
+        "prices": {
+          "Suite": 1.639,
+          "Balcon": 1.243,
+          "Vista al oceano": 1.191,
+          "Interno": 1.163
+        }
+      },
+      {
+        "text": {
+          "fecha": "22-fe",
+          "puertos": "At Sea, At Sea, Bonaire, Oranjestad (Aruba), At Sea, Colon"
+        },
+        "prices": {
+          "Suite": 1.639,
+          "Balcon": 1.243,
+          "Vista al oceano": 1.181,
+          "Interno": 1.163
+        }
+      },
+      {
+        "text": {
+          "fecha": "08-fe",
+          "puertos": "At Sea, Oranjestad (Aruba), Bonaire, At Sea, At Sea, Colon"
+        },
+        "prices": {
+          "Suite": 1.601,
+          "Balcon": 1.152,
+          "Vista al oceano": 1.1,
+          "Interno": 1.076
+        }
+      },
+      {
+        "text": {
+          "fecha": "03-fe",
+          "puertos": "Santa Marta Colombia, Oranjestad (Aruba), Oranjestad (Aruba), Bonaire, Willemstad (Curacao), At Sea, Castries St. Lucia, Bequia Grenadines"
+        },
+        "prices": {
+          "Suite": 4.419,
+          "Vista al oceano": null
+        }
+      }
+    ]
+  }
+]
