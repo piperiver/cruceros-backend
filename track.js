@@ -100,7 +100,7 @@ async function track() {
 }
 
 const server = http.createServer(async (req, res) => {
-  if (req.url === "/") {
+  if (req.url === "/cron-cruceros") {
     try {
       // 👇 Aquí va tu script actual
       console.log("Ejecutando script de cruceros...");
