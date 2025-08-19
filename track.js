@@ -1,3 +1,4 @@
+const http = require("http");
 const axios = require("axios");
 const cheerio = require("cheerio");
 const fs = require("fs");
@@ -98,4 +99,28 @@ async function track() {
   saveHistory(cruises);
 }
 
-track();
+const server = http.createServer(async (req, res) => {
+  if (req.url === "/") {
+    try {
+      // 👇 Aquí va tu script actual
+      console.log("Ejecutando script de cruceros...");
+      await track();
+      // Ejemplo: await miFuncionDeCron();
+
+      // 🔹 Muy importante: siempre responder
+      res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8" });
+      res.end("✅ Script de cruceros ejecutado correctamente");
+    } catch (err) {
+      console.error(err);
+      res.writeHead(500, { "Content-Type": "text/plain; charset=utf-8" });
+      res.end("❌ Error ejecutando script");
+    }
+  } else {
+    res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
+    res.end("Ruta no encontrada");
+  }
+});
+
+server.listen(3000, () => {
+  console.log("Servidor corriendo en http://localhost:3000");
+});
