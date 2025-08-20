@@ -1,21 +1,20 @@
-const http = require("http");
 const axios = require("axios");
 const cheerio = require("cheerio");
 const fs = require("fs");
 
 const URL =
   "https://cruise.ovscruise.com/cruises/promos/new/cruise_search.jsp?pid=2&langrecno=3&token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2JyYW5kIjoiMTEzIiwiY3VzdG9tZXJpZCI6Ik1EQzEwNTQ1MjAiLCJtZW1iZXJpZCI6Ik1EQzEwNTQ1MjAiLCJwaW4iOiIxMzI1IiwibmJmIjoxNzU1NjI2NDIxLCJleHAiOjE3NTU2MjY3ODEsImlzcyI6ImF1dGhvcml0eS5hcnJpdmlhLmNvbSIsImF1ZCI6Im92c2NydWlzZS5jb20ifQ.gp9m8p-ng2Ru8coFvASzZoIRyVq7zRmMB0PfY8_lWPo&CID=MDC&CBID=113&PIN=1325&tpid=&as=1&partnerid=186&nameid=39127934&specid=&cruiseline=-99&ship=-99&destination=19&dport=24&date=2X2026&dur=-99&prange=-99&sort=8&ord=1&webpagerecno=5793";
-const HISTORY_FILE = "historial.json";
+const HISTORY_FILE = "./public/historial.json";
 
 function cleanPrices(prices) {
   let cleaned = {};
   //   console.log(prices);
   for (const [key, value] of Object.entries(prices)) {
-    if (!["Interno", "Vista al oc�ano", "Balc�n", "Suite"].includes(key))
+    if (!["Interno", "Vista al ocano", "Balcn", "Suite"].includes(key))
       continue;
     let newKey = key
-      .replace("Vista al oc�ano", "Vista al oceano")
-      .replace("Balc�n", "Balcon");
+      .replace("Vista al ocano", "Vista al oceano")
+      .replace("Balcn", "Balcon");
     cleaned[newKey] = value;
   }
   return cleaned;
@@ -29,7 +28,7 @@ function parseCruiseText(text) {
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, ""); // quita acentos
 
-  let fechaMatch = clean.match(/Fecha de navegaci�n: ([^B]*)/i);
+  let fechaMatch = clean.match(/Fecha de navegacin: ([^B]*)/i);
   let puertosMatch = clean.match(/Puertos: (.+)/i);
 
   return {
@@ -97,30 +96,29 @@ async function track() {
 
   // Aquí podrías comparar con el historial para ver cambios
   saveHistory(cruises);
+  
+  return cruises;
 }
 
-const server = http.createServer(async (req, res) => {
-  if (req.url === "/cron-cruceros") {
-    try {
-      // 👇 Aquí va tu script actual
-      console.log("Ejecutando script de cruceros...");
-      await track();
-      // Ejemplo: await miFuncionDeCron();
+// Exportar la función para que pueda ser usada desde otras partes
+module.exports = { track, scrapeCruises, saveHistory };
 
-      // 🔹 Muy importante: siempre responder
-      res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8" });
-      res.end("✅ Script de cruceros ejecutado correctamente");
-    } catch (err) {
-      console.error(err);
-      res.writeHead(500, { "Content-Type": "text/plain; charset=utf-8" });
-      res.end("❌ Error ejecutando script");
+// Si se ejecuta directamente el archivo, ejecutar track()
+if (require.main === module) {
+  console.log("🚢 Iniciando script de tracking de cruceros...");
+  console.log("📅 Fecha:", new Date().toLocaleString('es-CO'));
+  
+  track().then((cruises) => {
+    if (cruises && cruises.length > 0) {
+      console.log(`✅ Script ejecutado correctamente`);
+      console.log(`📊 Se encontraron ${cruises.length} cruceros`);
+      console.log(`💾 Historial guardado en: ${HISTORY_FILE}`);
+    } else {
+      console.log("⚠️ No se encontraron cruceros");
     }
-  } else {
-    res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
-    res.end("Ruta no encontrada");
-  }
-});
-
-server.listen(3000, () => {
-  console.log("Servidor corriendo en http://localhost:3000");
-});
+    process.exit(0);
+  }).catch(err => {
+    console.error("❌ Error ejecutando script:", err);
+    process.exit(1);
+  });
+}
