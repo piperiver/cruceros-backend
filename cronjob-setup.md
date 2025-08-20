@@ -1,9 +1,15 @@
 # Configuración del CronJob en cPanel
 
-## Comando para ejecutar cada 6 horas:
+## Comando para ejecutar cada 6 horas (elige UNO):
 
+- Si tu cPanel soporta Node:
 ```bash
 cd /home/USUARIO/public_html/backend && /usr/bin/node scripts/track.js
+```
+
+- Si tu cPanel NO soporta Node (usa PHP):
+```bash
+cd /home/USUARIO/public_html/backend && /usr/bin/php scripts/track.php
 ```
 
 **Nota:** Reemplaza `USUARIO` con tu nombre de usuario de cPanel.
@@ -40,9 +46,15 @@ backend/
 │   └── track.js          # Script principal
 ├── public/
 │   └── historial.json    # Archivo generado por el cronjob
-└── src/
-    └── App.jsx           # Aplicación React que lee historial.json
+├── index.html             # Página web que lee historial.json
+└── package.json           # Dependencias (solo axios y cheerio)
 ```
+
+## Para ver la página web:
+
+- Accede a: `https://tudominio.com/backend/`
+- La página se actualiza automáticamente cada 5 minutos
+- También puedes usar el botón "Actualizar datos" manualmente
 
 ## Troubleshooting:
 
@@ -50,3 +62,5 @@ backend/
 - Asegúrate de que las dependencias estén instaladas: `npm install`
 - Verifica que el path al archivo sea correcto
 - El archivo se guarda en `./public/historial.json` para que sea accesible desde la web
+- No necesitas configurar nada en "Application startup file" - solo sube los archivos
+
