@@ -1,6 +1,7 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
 const fs = require("fs");
+const iconv = require("iconv-lite");
 
 const URL =
   "https://cruise.ovscruise.com/cruises/promos/new/cruise_search.jsp?pid=2&langrecno=3&token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2JyYW5kIjoiMTEzIiwiY3VzdG9tZXJpZCI6Ik1EQzEwNTQ1MjAiLCJtZW1iZXJpZCI6Ik1EQzEwNTQ1MjAiLCJwaW4iOiIxMzI1IiwibmJmIjoxNzU1NjI2NDIxLCJleHAiOjE3NTU2MjY3ODEsImlzcyI6ImF1dGhvcml0eS5hcnJpdmlhLmNvbSIsImF1ZCI6Im92c2NydWlzZS5jb20ifQ.gp9m8p-ng2Ru8coFvASzZoIRyVq7zRmMB0PfY8_lWPo&CID=MDC&CBID=113&PIN=1325&tpid=&as=1&partnerid=186&nameid=39127934&specid=&cruiseline=-99&ship=-99&destination=19&dport=24&date=2X2026&dur=-99&prange=-99&sort=8&ord=1&webpagerecno=5793";
@@ -10,11 +11,11 @@ function cleanPrices(prices) {
   let cleaned = {};
   //   console.log(prices);
   for (const [key, value] of Object.entries(prices)) {
-    if (!["Interno", "Vista al ocano", "Balcn", "Suite"].includes(key))
+    if (!["Interno", "Vista al océano", "Balcón", "Suite"].includes(key))
       continue;
     let newKey = key
-      .replace("Vista al ocano", "Vista al oceano")
-      .replace("Balcn", "Balcon");
+      .replace("Vista al océano", "Vista al oceano")
+      .replace("Balcón", "Balcon");
     cleaned[newKey] = value;
   }
   return cleaned;
@@ -27,8 +28,7 @@ function parseCruiseText(text) {
     .trim()
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, ""); // quita acentos
-
-  let fechaMatch = clean.match(/Fecha de navegacin: ([^B]*)/i);
+  let fechaMatch = clean.match(/Fecha de navegacion: ([^B]*)/i);
   let puertosMatch = clean.match(/Puertos: (.+)/i);
 
   return {
@@ -39,7 +39,9 @@ function parseCruiseText(text) {
 
 async function scrapeCruises() {
   try {
-    const { data } = await axios.get(URL);
+    const response = await axios.get(URL, { responseType: "arraybuffer" });
+    const data = iconv.decode(response.data, "latin1");
+
     const $ = cheerio.load(data);
 
     let cruises = [];
@@ -96,7 +98,7 @@ async function track() {
 
   // Aquí podrías comparar con el historial para ver cambios
   saveHistory(cruises);
-  
+
   return cruises;
 }
 
@@ -106,19 +108,21 @@ module.exports = { track, scrapeCruises, saveHistory };
 // Si se ejecuta directamente el archivo, ejecutar track()
 if (require.main === module) {
   console.log("🚢 Iniciando script de tracking de cruceros...");
-  console.log("📅 Fecha:", new Date().toLocaleString('es-CO'));
-  
-  track().then((cruises) => {
-    if (cruises && cruises.length > 0) {
-      console.log(`✅ Script ejecutado correctamente`);
-      console.log(`📊 Se encontraron ${cruises.length} cruceros`);
-      console.log(`💾 Historial guardado en: ${HISTORY_FILE}`);
-    } else {
-      console.log("⚠️ No se encontraron cruceros");
-    }
-    process.exit(0);
-  }).catch(err => {
-    console.error("❌ Error ejecutando script:", err);
-    process.exit(1);
-  });
+  console.log("📅 Fecha:", new Date().toLocaleString("es-CO"));
+
+  track()
+    .then((cruises) => {
+      if (cruises && cruises.length > 0) {
+        console.log(`✅ Script ejecutado correctamente`);
+        console.log(`📊 Se encontraron ${cruises.length} cruceros`);
+        console.log(`💾 Historial guardado en: ${HISTORY_FILE}`);
+      } else {
+        console.log("⚠️ No se encontraron cruceros");
+      }
+      process.exit(0);
+    })
+    .catch((err) => {
+      console.error("❌ Error ejecutando script:", err);
+      process.exit(1);
+    });
 }
